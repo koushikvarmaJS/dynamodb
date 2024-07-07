@@ -52,6 +52,7 @@ const createDynamoDbService = () => {
             'amount':Number(item.amount),
             'category':item.category,
             'description':item.description,
+            'transactionType':'Expense',
             'timeStamp':timeStamp()
         }
         const params = {
