@@ -1,15 +1,33 @@
-const {dynamoDbDocClient,tableName,userTable } = require('./config')
+const {dynamoDbDocClient,transactionTable,userTable } = require('./config')
 const {timeStamp} = require('./timeStamp')
 
 const createDynamoDbService = () => {
     const getDynamoDbClient = () => dynamoDbDocClient
 
-    const getTableName = () => tableName
+    const getTransactionTable = () => transactionTable
     const getUserTable = () => userTable
+
+    const getBalance = async (userId) => {
+        try{
+            const params = {
+                TableName: getUserTable(),
+                KeyConditionExpression:
+                    "userId=:userId",
+                ExpressionAttributeValues:{
+                    ":userId":Number(userId)
+                }
+            }
+            const data = await dynamoDbDocClient.query(params).promise()
+            return data.Items
+        }catch(err){
+            console.log('Error:',err)
+            throw(err)
+        }
+    }
     const getRecentTransactions = async (userId) => {
         try {
             const params = {
-                TableName: getTableName(),
+                TableName: getTransactionTable(),
                 // Key:{
                 //     userId:Number(userId)
                 // },
@@ -19,7 +37,7 @@ const createDynamoDbService = () => {
                     ":userId":Number(userId)
                 },
                 ScanIndexForward:false,
-                Limit:2
+                Limit:10
             }
             const data = await dynamoDbDocClient.query(params).promise()
             return data.Items
@@ -37,7 +55,7 @@ const createDynamoDbService = () => {
             'timeStamp':timeStamp()
         }
         const params = {
-            TableName:getTableName(),
+            TableName:getTransactionTable(),
             Item:newItem
         }
         const updateParams = {
@@ -88,7 +106,7 @@ const createDynamoDbService = () => {
     }
     return {
         getDynamoDbClient,
-        getTableName,
+        getBalance,
         getRecentTransactions,
         addNewExpense,
         addIncome

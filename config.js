@@ -12,7 +12,7 @@ const dynamoDbClient = new AWS.DynamoDB()
 
 const dynamoDbDocClient = new AWS.DynamoDB.DocumentClient({ region: process.env.region })
 
-const tableName = 'transactions';
+const transactionTable = 'transactions';
 const userTable = 'user'
 // let region = process.env.region;
 // console.log(region);
@@ -20,6 +20,6 @@ const userTable = 'user'
 module.exports = {
     dynamoDbClient,
     dynamoDbDocClient,
-    tableName,
+    transactionTable,
     userTable
 };
