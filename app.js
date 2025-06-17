@@ -1,8 +1,6 @@
 const express = require('express')
 const app = express()
-const createDynamoDbService = require('./services')
 const route = require('./route')
-const dynamoDbService = createDynamoDbService()
 
 app.use(express.json())
 app.use('/api',route)
